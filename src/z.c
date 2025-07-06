@@ -7,13 +7,13 @@
 
 #include <assert.h>
 #include <dirent.h>
-#include <linux/limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include "platform.h"
 #include "ecolors.h"
 #include "fzf.h"
 #include "z.h"

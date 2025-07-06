@@ -2,14 +2,15 @@
 /* This project is licensed under GNU GPLv3 */
 
 #include <assert.h>
-#include <linux/limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+
 #include "ecolors.h"
 #include "z.h"
 #include "help.h"
 #include "arena.h"
+#include "platform.h"
 
 #define Z "z" // the base command, changes directory
 #define Z_ADD "add"
