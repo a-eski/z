@@ -13,7 +13,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "platform.h"
+#include "platform.h" // used for macros
 #include "ecolors.h"
 #include "fzf.h"
 #include "z.h"
@@ -447,7 +447,7 @@ enum z_Result z_directory_match_exists(char* restrict target, size_t target_leng
 
     size_t dir_len;
     while ((dir = readdir(current_dir))) {
-        if (dir->d_name[0] == '\0' && dir->d_type) {
+        if (!dir || !*dir->d_name) {
             continue;
         }
 
