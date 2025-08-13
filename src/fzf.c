@@ -680,7 +680,11 @@ fzf_result_t fzf_fuzzy_match_v2(bool case_sensitive, fzf_string_t* text, fzf_str
                     consecutive = 1;
                 }
                 else if (consecutive > 1) {
+// ignore sign conversion warning on 32 bit systems like MSYS2 compiled with MinGW32
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
                     b = max16(b, max16(BonusConsecutive, bo.data[col - ((size_t)consecutive) + 1]));
+#pragma GCC diagnostic pop
                 }
                 if (s1 + b < s2) {
                     s1 += b_sub.data[j];

@@ -2,18 +2,34 @@ STD = -std=c2x
 CC ?= gcc
 DESTDIR ?= /bin
 RELEASE ?= 1
-# debug_flags = -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wsign-conversion -Wformat=2 -Wshadow -Wvla -Wwrite-strings -fstack-protector-all -fsanitize=address,undefined,leak -g
-debug_flags = -Wall -Wextra -Werror -Wsign-conversion -Wformat=2 -Wshadow -Wvla -fstack-protector-all -fsanitize=address,undefined,leak -g
-# -DNCSH_DEBUG
-# release_flags = -Wall -Wextra -Werror -pedantic-errors -Wsign-conversion -Wformat=2 -Wshadow -Wvla -Wwrite-strings -O3 -DNDEBUG
-release_flags = -Wall -Wextra -Werror -pedantic-errors -Wsign-conversion -Wformat=2 -Wshadow -Wvla -flto -O3 -ffast-math -march=native -DNDEBUG
-# fuzz_flags = -Wall -Wextra -Werror -pedantic-errors -Wformat=2 -Wwrite-strings -fsanitize=address,leak,fuzzer -DNDEBUG -g
-fuzz_flags = -Wall -Wextra -Werror -pedantic-errors -Wformat=2 -fsanitize=address,leak,fuzzer -DNDEBUG -g
+
+# can use to disable santiziers
+SAN ?= 1
+
+# can use to disable LTO
+LTO ?= 1
+
+main_flags = -Wall -Wextra -Werror -pedantic -pedantic-errors -Wsign-conversion -Wformat=2 -Wshadow -Wvla -fstack-protector-strong -fPIC -fPIE -Wundef -Wbad-function-cast -Wcast-align -Wstrict-prototypes -Wnested-externs -Winline -Wdisabled-optimization -Wunreachable-code -Wchar-subscripts
+
+debug_flags = $(main_flags) -D_FORTIFY_SOURCE=3 -g
+
+release_flags = $(main_flags) -O3 -ffast-math -march=native -DNDEBUG
+
+fuzz_flags = $(debug_flags) -fsanitize=fuzzer -DNDEBUG
+
 objects = obj/z_main.o obj/arena.o obj/help.o obj/fzf.o obj/z.o
 target = ./bin/z
 
 ifeq ($(CC), gcc)
 	release_flags += -s
+endif
+
+ifeq ($(SAN), 1)
+	debug_flags += -fsanitize=address,undefined,leak
+endif
+
+ifeq ($(LTO), 1)
+	release_flags += -flto
 endif
 
 ifeq ($(RELEASE), 1)
