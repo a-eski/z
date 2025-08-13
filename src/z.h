@@ -56,7 +56,7 @@ enum z_Result {
     Z_SUCCESS = 1
 };
 
-enum z_Result z_init(Str* restrict config_location, z_Database* restrict database, Arena* restrict arena);
+enum z_Result z_init(Str* restrict path, z_Database* restrict db, Arena* restrict arena);
 
 void z(char* restrict target, size_t target_length, char* restrict cwd, z_Database* restrict db, Arena* restrict arena,
        Arena scratch_arena);

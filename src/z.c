@@ -14,7 +14,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "platform.h" // used for macros
+#include "z_platform.h" // used for macros
 #include "ecolors.h"
 #include "fzf.h"
 #include "z.h"
@@ -406,7 +406,7 @@ enum z_Result z_database_file_set(Str* restrict config_file, z_Database* restric
     return Z_SUCCESS;
 }
 
-enum z_Result z_init(Str* restrict config_file, z_Database* restrict db, Arena* restrict arena)
+enum z_Result z_init(Str* restrict path, z_Database* restrict db, Arena* restrict arena)
 {
     assert(db);
     if (!db) {
@@ -414,7 +414,7 @@ enum z_Result z_init(Str* restrict config_file, z_Database* restrict db, Arena* 
     }
 
     enum z_Result result;
-    if ((result = z_database_file_set(config_file, db, arena)) != Z_SUCCESS || !db->database_file) {
+    if ((result = z_database_file_set(path, db, arena)) != Z_SUCCESS || !db->database_file) {
         return result;
     }
 
