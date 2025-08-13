@@ -5,9 +5,9 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "../../src/eskilib/etest.h"
-#include "../../src/z/z.h"
-#include "../lib/arena_test_helper.h"
+#include "etest.h"
+#include "../z.h"
+#include "lib/arena_test_helper.h"
 
 #define CWD_LENGTH 528
 
@@ -643,7 +643,7 @@ void z_empty_database_valid_subdirectory_change_directory_test()
         eassert(false);
     }
 
-    Str target = {.value = "tests", .length = 6};
+    Str target = {.value = "src", .length = sizeof("src")};
     z(target.value, target.length, buffer, &db, &arena, scratch_arena);
 
     if (!getcwd(buffer_after, CWD_LENGTH)) {
