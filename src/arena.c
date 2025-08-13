@@ -7,9 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/cdefs.h>
 
 #include "arena.h"
+#include "z_platform.h"
 
 void arena_abort__()
 {
@@ -27,8 +27,8 @@ void arena_abort_set(void (*abort_func)())
 }
 
 [[nodiscard]]
-__attribute_malloc__
-__attribute_alloc_align__((4))
+ATTR_MALLOC
+ATTR_ALLOC_ALIGN(4)
 void* arena_malloc__(Arena* restrict arena, uintptr_t count, uintptr_t size,
                             uintptr_t alignment)
 {
@@ -45,8 +45,8 @@ void* arena_malloc__(Arena* restrict arena, uintptr_t count, uintptr_t size,
 }
 
 [[nodiscard]]
-__attribute_malloc__
-__attribute_alloc_align__((4))
+ATTR_MALLOC
+ATTR_ALLOC_ALIGN(4)
 void* arena_realloc__(Arena* restrict arena, uintptr_t count, uintptr_t size,
                                                   uintptr_t alignment, void* old_ptr, uintptr_t old_count)
 {
