@@ -697,13 +697,13 @@ void z_print(z_Database* restrict db)
     }
 
     for (size_t i = 0; i < db->count; ++i) {
-        printf("z[%jd].path: %s\n", i, db->dirs[i].path);
-        printf("z[%jd].path_length: %zu\n", i, db->dirs[i].path_length);
+        printf("z[%zu].path: %s\n", i, db->dirs[i].path);
+        printf("z[%zu].path_length: %zu\n", i, db->dirs[i].path_length);
         struct tm* time = localtime(&db->dirs[i].last_accessed);
         char time_str[100] = {0};
         strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", time);
-        printf("z[%jd].last_accessed: %s\n", i, time_str);
-        printf("z[%jd].rank: %f\n\n", i, db->dirs[i].rank);
+        printf("z[%zu].last_accessed: %s\n", i, time_str);
+        printf("z[%zu].rank: %f\n\n", i, db->dirs[i].rank);
     }
 }
 
