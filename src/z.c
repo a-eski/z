@@ -3,6 +3,7 @@
 
 #ifndef _DEFAULT_SOURCE
 #define _DEFAULT_SOURCE // for anon enum DT_*
+#include <time.h>
 #endif                  /* ifndef _DEFAULT_SOURCE */
 
 #include <assert.h>
@@ -13,7 +14,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "platform.h" // used for macros
+#include "z_platform.h" // used for macros
 #include "ecolors.h"
 #include "fzf.h"
 #include "z.h"
@@ -405,7 +406,7 @@ enum z_Result z_database_file_set(Str* restrict config_file, z_Database* restric
     return Z_SUCCESS;
 }
 
-enum z_Result z_init(Str* restrict config_file, z_Database* restrict db, Arena* restrict arena)
+enum z_Result z_init(Str* restrict path, z_Database* restrict db, Arena* restrict arena)
 {
     assert(db);
     if (!db) {
@@ -413,7 +414,7 @@ enum z_Result z_init(Str* restrict config_file, z_Database* restrict db, Arena* 
     }
 
     enum z_Result result;
-    if ((result = z_database_file_set(config_file, db, arena)) != Z_SUCCESS || !db->database_file) {
+    if ((result = z_database_file_set(path, db, arena)) != Z_SUCCESS || !db->database_file) {
         return result;
     }
 
@@ -698,7 +699,10 @@ void z_print(z_Database* restrict db)
     for (size_t i = 0; i < db->count; ++i) {
         printf("z[%zu].path: %s\n", i, db->dirs[i].path);
         printf("z[%zu].path_length: %zu\n", i, db->dirs[i].path_length);
-        printf("z[%zu].last_accessed: %zu\n", i, db->dirs[i].last_accessed);
+        struct tm* time = localtime(&db->dirs[i].last_accessed);
+        char time_str[100] = {0};
+        strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", time);
+        printf("z[%zu].last_accessed: %s\n", i, time_str);
         printf("z[%zu].rank: %f\n\n", i, db->dirs[i].rank);
     }
 }

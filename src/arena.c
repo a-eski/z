@@ -1,6 +1,6 @@
-/* Copyright eskilib (C) by Alex Eski 2025 */
+/* Copyright ncsh (C) by Alex Eski 2025 */
 /* arena.h: a simple bump allocator for managing memory */
-/* Credit to skeeto and his blogs */
+/* Credit to skeeto and his blogs for inspiring this  */
 
 #include <assert.h>
 #include <stddef.h>
@@ -10,25 +10,34 @@
 #include <sys/cdefs.h>
 
 #include "arena.h"
-#include "ecolors.h"
 
-void arena_abort_internal()
+void arena_abort__()
 {
-    puts(RED "z: ran out of allocated memory." RESET);
+    puts("ncsh: ran out of allocated memory.");
     // TODO: implement different OOM stragety other than aborting.
-    fprintf(stderr, "\n" RED "z: out of memory, aborting.\n" RESET);
+    fprintf(stderr, "\nncsh: out of memory, aborting.\n");
     abort();
 }
 
+static void (*arena_abort_fn__)() = arena_abort__;
+
+void arena_abort_set(void (*abort_func)())
+{
+    arena_abort_fn__= abort_func;
+}
+
 [[nodiscard]]
-__attribute__((malloc)) void* arena_malloc_internal(Arena* restrict arena, uintptr_t count, uintptr_t size, uintptr_t alignment)
+__attribute_malloc__
+__attribute_alloc_align__((4))
+void* arena_malloc__(Arena* restrict arena, uintptr_t count, uintptr_t size,
+                            uintptr_t alignment)
 {
     assert(arena && count && size && alignment);
     uintptr_t padding = -(uintptr_t)arena->start & (alignment - 1);
     uintptr_t available = (uintptr_t)arena->end - (uintptr_t)arena->start - padding;
     assert(count < available / size);
     if (available == 0 || count > available / size) {
-        arena_abort_internal();
+        arena_abort_fn__();
     }
     void* val = arena->start + padding;
     arena->start += padding + count * size;
@@ -36,7 +45,9 @@ __attribute__((malloc)) void* arena_malloc_internal(Arena* restrict arena, uintp
 }
 
 [[nodiscard]]
-__attribute__((malloc)) void* arena_realloc_internal(Arena* restrict arena, uintptr_t count, uintptr_t size,
+__attribute_malloc__
+__attribute_alloc_align__((4))
+void* arena_realloc__(Arena* restrict arena, uintptr_t count, uintptr_t size,
                                                   uintptr_t alignment, void* old_ptr, uintptr_t old_count)
 {
     assert(arena);
@@ -50,7 +61,7 @@ __attribute__((malloc)) void* arena_realloc_internal(Arena* restrict arena, uint
     uintptr_t available = (uintptr_t)arena->end - (uintptr_t)arena->start - padding;
     assert(count < available / size);
     if (available == 0 || count > available / size) {
-        arena_abort_internal();
+        arena_abort_fn__();
     }
     void* val = arena->start + padding;
     arena->start += padding + count * size;

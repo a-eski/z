@@ -7,10 +7,11 @@
 #include <unistd.h>
 
 #include "ecolors.h"
+#include "str.h"
 #include "z.h"
 #include "help.h"
 #include "arena.h"
-#include "platform.h" // used for macros
+#include "z_platform.h" // used for macros
 
 #define Z "z" // the base command, changes directory
 #define Z_ADD "add"
@@ -103,9 +104,27 @@ int z_(z_Database* restrict z_db, char** restrict buffer, size_t* restrict buf_l
     return EXIT_SUCCESS;
 }
 
-int main(int argc, char** argv)
+[[nodiscard("Must free returned memory to cleanup arena resources")]]
+char* a_new(Arena* a)
 {
-    (void)argc; (void)argv;
-    printf("in z!\n");
+    char* memory;
+    arena_new(*a, 1 << 12, memory);
+    return memory;
+}
+
+int main()
+{
+    z_Database db = {0};
+    Arena a;
+    char* memory = a_new(&a);
+    z_init(&Str_New_Literal("./"), &db, &a);
+    Str v = Str_New_Literal("/home/user/src/tests/z_tests.c");
+    z_add(v.value, v.length, &db, &a);
+
+    z_print(&db);
+
+    z_exit(&db);
+    free(memory);
+
     return EXIT_SUCCESS;
 }

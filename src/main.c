@@ -10,7 +10,7 @@
 #include "z.h"
 #include "help.h"
 #include "arena.h"
-#include "platform.h" //
+#include "z_platform.h" //
 
 #define Z "z" // the base command, changes directory
 #define Z_ADD "add"

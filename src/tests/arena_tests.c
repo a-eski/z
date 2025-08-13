@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../src/arena.h"
-#include "../src/eskilib/etest.h"
+#include "../arena.h"
+#include "etest.h"
 #include "lib/arena_test_helper.h"
 
 void arena_malloc_test()
