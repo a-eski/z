@@ -5,8 +5,9 @@
 #pragma once
 
 #include <stdint.h>
-#include <sys/cdefs.h> // for __attribute_malloc__
 #include <time.h>
+
+#include "z_platform.h"
 
 typedef struct {
     char* start;
@@ -60,8 +61,8 @@ void arena_abort_fn_set(void (*abort_func)());
 
 void* arena_malloc__(Arena* restrict arena, uintptr_t count, uintptr_t size,
                             uintptr_t alignment)
-    __attribute_malloc__
-    __attribute_alloc_align__((4));
+    ATTR_MALLOC
+    ATTR_ALLOC_ALIGN(4);
 
 /* arena_realloc
  * Call to reallocate in the arena.
@@ -72,6 +73,5 @@ void* arena_malloc__(Arena* restrict arena, uintptr_t count, uintptr_t size,
 
 void* arena_realloc__(Arena* restrict arena, uintptr_t count, uintptr_t size, uintptr_t alignment, void* old_ptr,
                              uintptr_t old_count)
-    __attribute_malloc__
-    __attribute_alloc_align__((4));
-
+    ATTR_MALLOC
+    ATTR_ALLOC_ALIGN(4);
